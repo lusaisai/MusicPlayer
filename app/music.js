@@ -33,45 +33,6 @@
     		}
     	});
 
-    	// $scope.artistSelect = function (artist, $event) {
-    	// 	if ($event.ctrlKey) {
-    	// 		if (artist.selected) {
-    	// 			artist.selected = false;
-    	// 		} else{
-    	// 			artist.selected = true;
-    	// 		};
-    	// 	} else if($event.shiftKey){
-    	// 		var start=0;
-    	// 		var end=0;
-    	// 		var startFound=false;
-    	// 		artist.selected = true;
-    	// 		$scope.artists.forEach(function (artist, index) {
-    	// 			if (artist.selected) {
-    	// 				if(!startFound) {
-    	// 					startFound = true;
-    	// 					start = index;
-    	// 				}
-    	// 				end = index;
-    	// 			}
-    	// 		});
-    	// 		$scope.artists.forEach(function (artist, index) {
-    	// 			if (index >= start && index <= end) {
-    	// 				artist.selected = true;
-    	// 			} else{
-    	// 				artist.selected = false;
-    	// 			}
-    	// 		});
-
-    	// 	} else {
-    	// 		$scope.artists.forEach(function (artist) {
-    	// 			artist.selected = false;
-    	// 		});
-    	// 		artist.selected = true;
-    	// 	}
-
-    	// 	updateAlbumList();
-    	// };
-
     	var select = function(name) {
     		return function(obj, $event) {
     			if ($event.ctrlKey) {
@@ -119,10 +80,6 @@
     	};
 
     	$scope.artistSelect = select("artist");
-    	
-    	
-
-    	
     	
 
     	// albums
@@ -227,8 +184,9 @@
 			return songs;
 		};
 
-		$scope.playPlaylist = function(index=0){
+		$scope.playPlaylist = function(index){
 			if ($scope.playlistSongs.length > 0) {
+                index = typeof(index) !== "undefined" ? index : 0; 
 				var song = $scope.playlistSongs[index];
 				audio.src = song.url;
 				audio.play();
