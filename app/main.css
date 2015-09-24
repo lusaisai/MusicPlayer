@@ -2,29 +2,20 @@ div.topbox {
 	height: 500px;
 }
 
-#explorer, .playlist tbody {
+.list, table {
 	-webkit-user-select: none; /* webkit (safari, chrome) browsers */
     -moz-user-select: none; /* mozilla browsers */
     -khtml-user-select: none; /* webkit (konqueror) browsers */
     -ms-user-select: none; /* IE10+ */
 }
 
-ul {
-	padding-left: 0px;
+.list {
 	max-height: 380px;
 	overflow-y: scroll;
 }
 
-li {
-	list-style-type: none;
-	cursor: pointer;
-}
-
-li.highlight {
-	background-color: #FFFFCC;
-}
-li:hover {
-	background-color: #FFFFCC;
+.highlight {
+	background-color: #FFFFCC !important;
 }
 
 h3 {
@@ -35,20 +26,19 @@ h3 {
 	width: 100%;
 }
 
-.playlist thead {
-	text-align: center;
-}
-
 .playlist tbody {
 	cursor: pointer;
 }
 
-.playlist tbody tr:hover {
-	background-color: #FFFFCC;
+table {
+	text-align: center !important;
 }
 
-.playlist tbody tr.highlight {
-	background-color: #FFFFCC;
+#play-progress {
+	margin-bottom: 5px;
+	cursor: pointer;
 }
 
-
+#play-progress .bar {
+	min-width: 0px;
+}

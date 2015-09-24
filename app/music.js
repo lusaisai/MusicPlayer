@@ -9,7 +9,7 @@
     	var allArtists;
     	
     	// artists
-    	$http.get(server+"artist").then(function (response) {
+    	$http.get(server+"artist/").then(function (response) {
     		allArtists = response.data.artists.map(function (artist) {
     			var obj = {};
     			obj.id = artist.id;
@@ -90,7 +90,7 @@
 
     		$scope.artists.forEach(function(artist, index){
     			if (artist.selected) {
-    				$http.get(server+"artist/"+artist.id).then(function (response) {
+    				$http.get(server+"artist/"+artist.id+"/").then(function (response) {
     					response.data.albums.forEach(function(album, index){
     						allAlbums.push({
     							id: album.id,
@@ -125,7 +125,7 @@
     		allSongs = [];
     		$scope.albums.forEach(function(album, index){
     			if (album.selected) {
-    				$http.get(server+"album/"+album.id).then(function (response) {
+    				$http.get(server+"album/"+album.id+"/").then(function (response) {
     					response.data.songs.forEach(function(song, index){
     						allSongs.push({
     							id: song.id,
@@ -160,10 +160,14 @@
     	// The audio player part
     	////////////////////////////////////////////////////////////////////////////////////////
     	var audio = new Audio();
+        audio.src = "";
 		
 		$scope.playlistSongs = [];
 		$scope.isPlaying = false;
 		$scope.currentPlaying = -1;
+        $scope.playPercentage = 0;
+        $scope.duration = "00:00";
+        $scope.playtime = "00:00";
 
 		// We don't wanna share the playlist songs with the songs in the explorer, it would create troubles
 		var copySelectedSongs = function(){
@@ -184,6 +188,27 @@
 			return songs;
 		};
 
+        var sec2min = function(time){
+            var minutes = Math.floor(time / 60);
+            var seconds = time - minutes * 60;
+            var padding = function(string, pad, length) {
+                return (new Array(length+1).join(pad)+string).slice(-length);
+            };
+            return padding(minutes, '0', 2) + ':' + padding(seconds, '0', 2);
+        };
+
+        var refreshCurrentPlayingIndex = function(){
+            if (audio.src === "") {
+                $scope.currentPlaying = -1;
+            } else if ($scope.playlistSongs.length > 0) {
+                $scope.playlistSongs.forEach(function(song, index){
+                    if (audio.src === song.url) {
+                        $scope.currentPlaying = index;
+                    }
+                });
+            }
+        };
+
 		$scope.playPlaylist = function(index){
 			if ($scope.playlistSongs.length > 0) {
                 index = typeof(index) !== "undefined" ? index : 0; 
@@ -199,23 +224,59 @@
 			if ( $scope.currentPlaying < $scope.playlistSongs.length - 1 ) {
 				$scope.currentPlaying += 1;
 				$scope.playPlaylist($scope.currentPlaying);
-			}
+			} else {
+                $scope.currentPlaying = -1;
+                audio.src = "";
+            }
 		};
 
 		$scope.playPrevious = function(){
 			if ( $scope.currentPlaying > 0 ) {
 				$scope.currentPlaying -= 1;
 				$scope.playPlaylist($scope.currentPlaying);
-			}
+			} else {
+                $scope.currentPlaying = $scope.playlistSongs.length;
+                audio.src = "";
+            }
 		};
 
 		var whenended = function(){
 			$scope.isPlaying = false;
-			$scope.playNext();
+            var playOrder = angular.element("input[name='playorder']").val();
+            if (playOrder === "play-in-order") {
+                $scope.playNext();
+            } else if(playOrder === "repeat-playlist"){
+                if ($scope.currentPlaying === $scope.playlistSongs.length - 1) {
+                    $scope.playPlaylist(0);
+                } else{
+                    $scope.playNext();
+                }
+            } else if(playOrder === "repeat-track"){
+                $scope.playPlaylist($scope.currentPlaying);
+            } else{
+                $scope.playNext();
+            }
+			
 			$scope.$digest();
 		};
 
-		audio.addEventListener('ended', whenended);
+        var whenTimeupdate = function(){
+            $scope.playtime = sec2min(Math.floor(audio.currentTime));
+            $scope.duration = sec2min(Math.floor(audio.duration));
+            $scope.playPercentage = audio.currentTime * 100 / audio.duration;
+            $scope.$apply();
+        };
+
+        audio.addEventListener('ended', whenended);
+		audio.addEventListener('timeupdate', whenTimeupdate);
+
+        $scope.seek = function($event){
+            var width = $event.offsetX;
+            var total = $event.target.offsetWidth;
+            if (audio.src.length > 0) {
+                audio.currentTime = Math.floor( audio.duration * width / total );
+            }
+        };
 
 		$scope.dblplay = function(song){
 			$scope.playlistSongs = [song];
@@ -230,9 +291,7 @@
 				audio.play();
 				$scope.isPlaying = true;
 			} else{
-				if ( $scope.playlistSongs.length === 0 ) {
-					$scope.playlistSongs = copySelectedSongs();
-				}
+				$scope.playlistSongs = copySelectedSongs();
 				$scope.playPlaylist();
 			};
 		};
@@ -251,6 +310,7 @@
 			$scope.playlistSongs = $scope.playlistSongs.filter(function(song){
 				return !song.selected;
 			});
+            refreshCurrentPlayingIndex();
 		};
 
 		$scope.playlistSongSelect = select("playlistSong");
