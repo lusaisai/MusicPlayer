@@ -5,11 +5,10 @@
     	////////////////////////////////////////////////////////////////////////////////////////
     	// The music explorer part 
     	////////////////////////////////////////////////////////////////////////////////////////
-    	var server = "http://localhost:8000/";
     	var allArtists;
     	
     	// artists
-    	$http.get(server+"artist/").then(function (response) {
+    	$http.get("/artist/").then(function (response) {
     		allArtists = response.data.artists.map(function (artist) {
     			var obj = {};
     			obj.id = artist.id;
@@ -90,7 +89,7 @@
 
     		$scope.artists.forEach(function(artist, index){
     			if (artist.selected) {
-    				$http.get(server+"artist/"+artist.id+"/").then(function (response) {
+    				$http.get("/artist/"+artist.id+"/").then(function (response) {
     					response.data.albums.forEach(function(album, index){
     						allAlbums.push({
     							id: album.id,
@@ -125,7 +124,7 @@
     		allSongs = [];
     		$scope.albums.forEach(function(album, index){
     			if (album.selected) {
-    				$http.get(server+"album/"+album.id+"/").then(function (response) {
+    				$http.get("/album/"+album.id+"/").then(function (response) {
     					response.data.songs.forEach(function(song, index){
     						allSongs.push({
     							id: song.id,
