@@ -261,6 +261,14 @@
             }
 		};
 
+        var getRandomInt = function(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        };
+
+        $scope.playNextRandom = function(){
+            $scope.playPlaylist(getRandomInt(0, $scope.playlistSongs.length));
+        };
+
 		var whenended = function(){
 			$scope.isPlaying = false;
             var playOrder = angular.element("input[name='playorder']").val();
@@ -274,6 +282,8 @@
                 }
             } else if(playOrder === "repeat-track"){
                 $scope.playPlaylist($scope.currentPlaying);
+            } else if(playOrder === "random"){
+                $scope.playNextRandom();
             } else{
                 $scope.playNext();
             }
@@ -290,9 +300,7 @@
         };
 
         audio.addEventListener('ended', whenended);
-		audio.addEventListener('timeupdate', whenTimeupdate);
-
-        
+		audio.addEventListener('timeupdate', whenTimeupdate);    
 
         $scope.seek = function($event){
             var width = $event.offsetX;
@@ -303,7 +311,7 @@
         };
 
 		$scope.dblplay = function(song){
-			$scope.playlistSongs = [song];
+			$scope.playlistSongs = copySelectedSongs();
 			$scope.playPlaylist();
 		};
 

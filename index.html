@@ -85,6 +85,9 @@
                 <button class="ui icon button" ng-click="playNext()">
                     <i class="icon forward"></i>
                 </button>
+                <button class="ui icon button" ng-click="playNextRandom()">
+                    <i class="icon random"></i>
+                </button>
             </div>
             <div class="ui selection dropdown">
               <input type="hidden" name="playorder" value="play-in-order">
@@ -94,6 +97,7 @@
                 <div class="item" data-value="play-in-order">Play in order</div>
                 <div class="item" data-value="repeat-playlist">Repeat playlist</div>
                 <div class="item" data-value="repeat-track">Repeat track</div>
+                <div class="item" data-value="random">Random</div>
               </div>
             </div>
             <div id="play-progress" class="ui small progress" ng-click="seek($event)">
