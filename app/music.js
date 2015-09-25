@@ -209,7 +209,8 @@
             }
         };
 
-        $scope.setLyrics = function(song, reload=false){
+        $scope.setLyrics = function(song, reload){
+            reload = typeof reload !== 'undefined' ? reload : false;
             url = reload ? '/reloadlyrics/' : '/lyrics/';
             lrc.setLrc("[00:00] loading ...");
             $http.get(url + song.id + '/').then(function(response){
