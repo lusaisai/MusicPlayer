@@ -197,8 +197,13 @@
             return padding(minutes, '0', 2) + ':' + padding(seconds, '0', 2);
         };
 
+        var isAudioSrcValid = function(){
+            var pattern = /(mp3|m4a)$/i;
+            return pattern.test(audio.src);
+        };
+
         var refreshCurrentPlayingIndex = function(){
-            if (audio.src === "") {
+            if (!isAudioSrcValid()) {
                 $scope.currentPlaying = -1;
             } else if ($scope.playlistSongs.length > 0) {
                 $scope.playlistSongs.forEach(function(song, index){
@@ -285,10 +290,12 @@
         audio.addEventListener('ended', whenended);
 		audio.addEventListener('timeupdate', whenTimeupdate);
 
+        
+
         $scope.seek = function($event){
             var width = $event.offsetX;
             var total = $event.target.offsetWidth;
-            if (audio.src.length > 0) {
+            if (isAudioSrcValid()) {
                 audio.currentTime = Math.floor( audio.duration * width / total );
             }
         };
@@ -302,7 +309,7 @@
 			if ($scope.isPlaying) {
 				audio.pause();
 				$scope.isPlaying = false;
-			} else if(audio.paused && audio.currentSrc.length > 0){
+			} else if(audio.paused && isAudioSrcValid()){
 				audio.play();
 				$scope.isPlaying = true;
 			} else{
@@ -312,6 +319,7 @@
 		};
 
 		$scope.stop = function () {
+            audio.currentTime = 0;
 			audio.src = "";
 			$scope.isPlaying = false;
 		};
