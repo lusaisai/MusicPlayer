@@ -265,8 +265,27 @@
             return Math.floor(Math.random() * (max - min)) + min;
         };
 
-        $scope.playNextRandom = function(){
+        $scope.playNextRandomly = function(){
             $scope.playPlaylist(getRandomInt(0, $scope.playlistSongs.length));
+        };
+
+        $scope.playSomeRandomSongs = function() {
+            var number = 15;
+            $http.get('/randomsongs/' + 15 + '/').then(function(response){
+                $scope.playlistSongs = [];
+                response.data.songs.forEach(function(song, index){
+                    $scope.playlistSongs.push({
+                        id: song.id,
+                        name: song.name,
+                        artistName: song.artistName,
+                        albumName: song.albumName,
+                        pinyinName: song.pinyinName,
+                        url: song.url,
+                        selected: false
+                    });
+                });
+                $scope.playPlaylist(0);
+            });
         };
 
 		var whenended = function(){
@@ -283,7 +302,7 @@
             } else if(playOrder === "repeat-track"){
                 $scope.playPlaylist($scope.currentPlaying);
             } else if(playOrder === "random"){
-                $scope.playNextRandom();
+                $scope.playNextRandomly();
             } else{
                 $scope.playNext();
             }

@@ -85,8 +85,13 @@
                 <button class="ui icon button" ng-click="playNext()">
                     <i class="icon forward"></i>
                 </button>
-                <button class="ui icon button" ng-click="playNextRandom()">
+                <button class="ui icon button" ng-click="playNextRandomly()">
                     <i class="icon random"></i>
+                </button>
+            </div>
+            <div class="ui icon buttons">
+                <button class="ui icon button" data-content="Randomly select some songs to play" ng-click="playSomeRandomSongs()">
+                    <i class="icon music"></i>
                 </button>
             </div>
             <div class="ui selection dropdown">
@@ -100,6 +105,7 @@
                 <div class="item" data-value="random">Random</div>
               </div>
             </div>
+
             <div id="play-progress" class="ui small progress" ng-click="seek($event)">
                 <div style="transition-duration: 0ms;" ng-style="{'width': playPercentage + '%'}" class="bar">
                     <div class="progress">{{playtime}}/{{duration}}</div>
