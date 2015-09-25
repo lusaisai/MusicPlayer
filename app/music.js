@@ -161,6 +161,7 @@
     	var audio = new Audio();
         var lrc = new Lyricer();
         audio.src = "";
+        audio.songUrl = ""; // audio.src will be encoded, this attribute keeps the original url
 		
 		$scope.playlistSongs = [];
 		$scope.isPlaying = false;
@@ -207,7 +208,7 @@
                 $scope.currentPlaying = -1;
             } else if ($scope.playlistSongs.length > 0) {
                 $scope.playlistSongs.forEach(function(song, index){
-                    if (audio.src === song.url) {
+                    if (audio.songUrl === song.url) {
                         $scope.currentPlaying = index;
                     }
                 });
@@ -231,7 +232,8 @@
 			if ($scope.playlistSongs.length > 0) {
                 index = typeof(index) !== "undefined" ? index : 0; 
 				var song = $scope.playlistSongs[index];
-				audio.src = song.url;
+                audio.src = song.url;
+				audio.songUrl = song.url;
 				audio.play();
                 $scope.setLyrics(song);
 				$scope.isPlaying = true;
