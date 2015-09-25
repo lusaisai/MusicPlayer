@@ -5,10 +5,13 @@
     <title>MusicPlayer</title>
     <link rel="stylesheet" href="vendor/semantic/semantic.min.css"/>
     <link rel="stylesheet" href="app/main.css"/>
+    <link rel="stylesheet" href="vendor/css/lyricer-1.0.0.min.css"/>
     <script src="vendor/javascript/jquery-1.11.3.min.js"></script>
     <script src="vendor/javascript/angular.min.js"></script>
     <script src="vendor/semantic/semantic.min.js"></script>
+    <script src="vendor/javascript/lyricer-1.0.0.min.js"></script>
     <script src="app/music.js"></script>
+    <link rel="icon" type="image/ico" href="favicon.ico"/>
 </head>
 <body ng-app="music">
 <div class="ui grid" ng-controller="MusicController">
@@ -53,7 +56,11 @@
         </div>
     </div>
     <div class="three wide column">
-        {{ data.lyric }}
+        <h3>Lyrics</h3>
+        <button class="ui icon button" data-content="Reload another piece of lyrics from server" ng-click="setLyrics(playlistSongs[currentPlaying], reload=true)">
+            <i class="refresh icon"></i>
+        </button>
+        <div id="lyricer"></div>
     </div>        
     <div class="two wide column"></div>
     <div class="two wide column"></div>

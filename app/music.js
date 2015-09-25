@@ -159,6 +159,7 @@
     	// The audio player part
     	////////////////////////////////////////////////////////////////////////////////////////
     	var audio = new Audio();
+        var lrc = new Lyricer();
         audio.src = "";
 		
 		$scope.playlistSongs = [];
@@ -208,12 +209,25 @@
             }
         };
 
+        $scope.setLyrics = function(song, reload=false){
+            url = reload ? '/reloadlyrics/' : '/lyrics/';
+            lrc.setLrc("[00:00] loading ...");
+            $http.get(url + song.id + '/').then(function(response){
+                var content = response.data.content;
+                if ( content.length == 0 ) {
+                    content = "[00:00] No lyrics found";
+                }
+                lrc.setLrc(content);
+            });
+        };
+
 		$scope.playPlaylist = function(index){
 			if ($scope.playlistSongs.length > 0) {
                 index = typeof(index) !== "undefined" ? index : 0; 
 				var song = $scope.playlistSongs[index];
 				audio.src = song.url;
 				audio.play();
+                $scope.setLyrics(song);
 				$scope.isPlaying = true;
 				$scope.currentPlaying = index;
 			};
@@ -263,6 +277,7 @@
             $scope.playtime = sec2min(Math.floor(audio.currentTime));
             $scope.duration = sec2min(Math.floor(audio.duration));
             $scope.playPercentage = audio.currentTime * 100 / audio.duration;
+            lrc.move(audio.currentTime);
             $scope.$apply();
         };
 
@@ -311,6 +326,8 @@
 			});
             refreshCurrentPlayingIndex();
 		};
+
+        
 
 		$scope.playlistSongSelect = select("playlistSong");
 
