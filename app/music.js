@@ -134,7 +134,7 @@
 	    						albumName: song.albumName,
 	    						pinyinName: song.pinyinName,
 	    						url: song.url,
-	    						selected: false
+	    						selected: true
 	    					});
     					});
     					$scope.songs = allSongs;
