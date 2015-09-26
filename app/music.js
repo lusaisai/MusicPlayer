@@ -1,13 +1,8 @@
 (function () {
     var music = angular.module("music", []);
 
-    music.factory('currentSongFactory', function(){
-        return {
-            'name': ''
-        };
-    });
 
-    music.controller('MusicController', ['$scope', '$http', 'currentSongFactory', function($scope, $http, currentSongFactory){
+    music.controller('MusicController', ['$scope', '$http', function($scope, $http){
     	////////////////////////////////////////////////////////////////////////////////////////
     	// The music explorer part 
     	////////////////////////////////////////////////////////////////////////////////////////
@@ -179,19 +174,22 @@
 		// We don't wanna share the playlist songs with the songs in the explorer, it would create troubles
 		var copySelectedSongs = function(){
 			var songs = [];
-			$scope.songs.forEach(function(song, index){
-				if(song.selected){
-					songs.push({
-						id: song.id,
-	    				name: song.name,
-	    				artistName: song.artistName,
-	    				albumName: song.albumName,
-	    				pinyinName: song.pinyinName,
-	    				url: song.url,
-	    				selected: false
-					});
-				}
-			});
+            if ( typeof $scope.songs !== "undefined" ) {
+                $scope.songs.forEach(function(song, index){
+                    if(song.selected){
+                        songs.push({
+                            id: song.id,
+                            name: song.name,
+                            artistName: song.artistName,
+                            albumName: song.albumName,
+                            pinyinName: song.pinyinName,
+                            url: song.url,
+                            selected: false
+                        });
+                    }
+                });
+            }
+			
 			return songs;
 		};
 
@@ -234,6 +232,17 @@
             });
         };
 
+        // I could do it in the angular way, but the raw angular expression shows in the title beore it gets parsed,
+        // I'll access the dom directly before I find the angular solution.
+        var updateHtmlTitle = function(name){
+            if (name === '') {
+                title = 'MusicPlayer';
+            } else {
+                title = 'MusicPlayer - ' + name;
+            }
+            angular.element('title').html(title);
+        };
+
 		$scope.playPlaylist = function(index){
 			if ($scope.playlistSongs.length > 0) {
                 index = typeof(index) !== "undefined" ? index : 0; 
@@ -244,7 +253,7 @@
                 $scope.setLyrics(song);
 				$scope.isPlaying = true;
 				$scope.currentPlaying = index;
-                currentSongFactory.name = song.name;
+                updateHtmlTitle(song.name);
 			};
 		};
 
@@ -255,7 +264,7 @@
 			} else {
                 $scope.currentPlaying = -1;
                 audio.src = "";
-                currentSongFactory.name = song.name;
+                updateHtmlTitle(song.name);
             }
 		};
 
@@ -266,7 +275,7 @@
 			} else {
                 $scope.currentPlaying = $scope.playlistSongs.length;
                 audio.src = "";
-                currentSongFactory.name = song.name;
+                updateHtmlTitle(song.name);
             }
 		};
 
@@ -351,15 +360,25 @@
 				audio.play();
 				$scope.isPlaying = true;
 			} else{
-				$scope.playlistSongs = copySelectedSongs();
-				$scope.playPlaylist();
+                var songs = copySelectedSongs();
+                var index = 0;
+                if (songs.length > 0){
+                    $scope.playlistSongs = songs;
+                }
+				for (var i = 0; i < $scope.playlistSongs.length; i++) {
+                    if ($scope.playlistSongs[i].selected) {
+                        index = i;
+                        break;
+                    }
+                };
+				$scope.playPlaylist(index);
 			};
 		};
 
 		$scope.stop = function () {
             audio.currentTime = 0;
 			audio.src = "";
-            currentSongFactory.name = song.name;
+            updateHtmlTitle('');
 			$scope.isPlaying = false;
 		};
 
@@ -375,14 +394,8 @@
             refreshCurrentPlayingIndex();
 		};
 
-        
-
 		$scope.playlistSongSelect = select("playlistSong");
 
     }]);
 
-
-    music.controller('TitleController', ['$scope', 'currentSongFactory', function($scope, currentSongFactory){
-        $scope.song = currentSongFactory;
-    }]);
 }())
