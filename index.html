@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="music">
 <head>
     <meta charset="UTF-8">
-    <title>MusicPlayer</title>
+    <title ng-controller="TitleController">MusicPlayer {{ song.name.length > 0 ? ' - ' + song.name : '' }}</title>
     <link rel="stylesheet" href="vendor/semantic/semantic.min.css"/>
     <link rel="stylesheet" href="app/main.css"/>
     <link rel="stylesheet" href="vendor/css/lyricer-1.0.0.min.css"/>
@@ -13,7 +13,7 @@
     <script src="app/music.js"></script>
     <link rel="icon" type="image/ico" href="favicon.ico"/>
 </head>
-<body ng-app="music">
+<body>
 <div class="ui grid" ng-controller="MusicController">
     <div class="two wide column"></div>
     <div class="three wide column topbox">

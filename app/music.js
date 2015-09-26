@@ -1,7 +1,13 @@
 (function () {
     var music = angular.module("music", []);
 
-    music.controller('MusicController', ['$scope', '$http', function($scope, $http){
+    music.factory('currentSongFactory', function(){
+        return {
+            'name': ''
+        };
+    });
+
+    music.controller('MusicController', ['$scope', '$http', 'currentSongFactory', function($scope, $http, currentSongFactory){
     	////////////////////////////////////////////////////////////////////////////////////////
     	// The music explorer part 
     	////////////////////////////////////////////////////////////////////////////////////////
@@ -238,6 +244,7 @@
                 $scope.setLyrics(song);
 				$scope.isPlaying = true;
 				$scope.currentPlaying = index;
+                currentSongFactory.name = song.name;
 			};
 		};
 
@@ -248,6 +255,7 @@
 			} else {
                 $scope.currentPlaying = -1;
                 audio.src = "";
+                currentSongFactory.name = song.name;
             }
 		};
 
@@ -258,6 +266,7 @@
 			} else {
                 $scope.currentPlaying = $scope.playlistSongs.length;
                 audio.src = "";
+                currentSongFactory.name = song.name;
             }
 		};
 
@@ -350,6 +359,7 @@
 		$scope.stop = function () {
             audio.currentTime = 0;
 			audio.src = "";
+            currentSongFactory.name = song.name;
 			$scope.isPlaying = false;
 		};
 
@@ -369,5 +379,10 @@
 
 		$scope.playlistSongSelect = select("playlistSong");
 
+    }]);
+
+
+    music.controller('TitleController', ['$scope', 'currentSongFactory', function($scope, currentSongFactory){
+        $scope.song = currentSongFactory;
     }]);
 }())
