@@ -161,11 +161,12 @@
     	////////////////////////////////////////////////////////////////////////////////////////
     	var audio = new Audio();
         var lrc = new Lyricer();
+        $scope.STATUS = {"PLAYING": 0, "PAUSED": 1, "STOPPED": 2}
         audio.src = "";
         audio.songUrl = ""; // audio.src will be encoded, this attribute keeps the original url
 		
 		$scope.playlistSongs = [];
-		$scope.isPlaying = false;
+		$scope.status = $scope.STATUS.STOPPED;
 		$scope.currentPlaying = -1;
         $scope.playPercentage = 0;
         $scope.duration = "00:00";
@@ -251,7 +252,7 @@
 				audio.songUrl = song.url;
 				audio.play();
                 $scope.setLyrics(song);
-				$scope.isPlaying = true;
+                $scope.status = $scope.STATUS.PLAYING;
 				$scope.currentPlaying = index;
                 updateHtmlTitle(song.name);
 			};
@@ -307,7 +308,7 @@
         };
 
 		var whenended = function(){
-			$scope.isPlaying = false;
+            $scope.status = $scope.STATUS.STOPPED;
             var playOrder = angular.element("input[name='playorder']").val();
             if (playOrder === "play-in-order") {
                 $scope.playNext();
@@ -353,12 +354,12 @@
 		};
 
 		$scope.playOrPause = function () {
-			if ($scope.isPlaying) {
+			if ($scope.status === $scope.STATUS.PLAYING ) {
 				audio.pause();
-				$scope.isPlaying = false;
+                $scope.status = $scope.STATUS.PAUSED;
 			} else if(audio.paused && isAudioSrcValid()){
 				audio.play();
-				$scope.isPlaying = true;
+                $scope.status = $scope.STATUS.PLAYING;
 			} else{
                 var songs = copySelectedSongs();
                 var index = 0;
@@ -379,7 +380,7 @@
             audio.currentTime = 0;
 			audio.src = "";
             updateHtmlTitle('');
-			$scope.isPlaying = false;
+            $scope.status = $scope.STATUS.STOPPED;
 		};
 
 		$scope.addToPlaylist = function(){

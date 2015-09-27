@@ -77,7 +77,7 @@
                     <i class="icon stop"></i>
                 </button>
                 <button class="ui icon button" ng-click="playOrPause()">
-                    <i ng-class="{'icon play': !isPlaying, 'icon pause': isPlaying}"></i>
+                    <i ng-class="{'icon play': status !== STATUS.PLAYING, 'icon pause': status === STATUS.PLAYING}"></i>
                 </button>
                 <button class="ui icon button" ng-click="playPrevious()">
                     <i class="icon backward"></i>
@@ -120,7 +120,7 @@
                 <tbody>
                     <tr ng-repeat="song in playlistSongs track by $index" ng-class="{highlight: song.selected}" ng-dblclick="playPlaylist($index)" ng-click="playlistSongSelect(song, $event)">
                         <th>{{$index+1}}</th>
-                        <th><i class="icon play" ng-show="currentPlaying == $index"></i></th>
+                        <th><i ng-class="{'icon play': status === STATUS.PLAYING, 'icon pause': status === STATUS.PAUSED, 'icon stop': status === STATUS.STOPPED}" ng-show="currentPlaying == $index"></i></th>
                         <th>{{song.name}}</th>
                         <th>{{song.artistName}}</th>
                         <th>{{song.albumName}}</th>
