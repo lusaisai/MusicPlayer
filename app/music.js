@@ -354,7 +354,12 @@
         };
 
         audio.addEventListener('ended', whenended);
-		audio.addEventListener('timeupdate', whenTimeupdate);    
+		audio.addEventListener('timeupdate', whenTimeupdate);
+        window.addEventListener('lyricerclick', function(e){
+            if (e.detail.time > 0) {
+                audio.currentTime = e.detail.time;
+            }
+        });
 
         $scope.seek = function($event){
             var width = $event.offsetX;
