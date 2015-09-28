@@ -89,11 +89,13 @@
                     <i class="icon random"></i>
                 </button>
             </div>
+            
             <div class="ui icon buttons">
                 <button class="ui icon button" data-content="Randomly select some songs to play" ng-click="playSomeRandomSongs()">
                     <i class="icon music"></i>
                 </button>
             </div>
+            
             <div class="ui selection dropdown">
               <input type="hidden" name="playorder" value="play-in-order">
               <i class="dropdown icon"></i>
@@ -104,6 +106,13 @@
                 <div class="item" data-value="repeat-track">Repeat track</div>
                 <div class="item" data-value="random">Random</div>
               </div>
+            </div>
+
+            <button class="ui icon button" ng-click="muteOrNot()">
+                <i class="icon volume" ng-class="{up: volume >=3, down: volume > 0 && volume < 3, off: volume == 0}"></i>
+            </button>
+            <div id="volume-control" class="ui star rating">
+                <i class="icon" ng-repeat="n in [1,2,3,4,5]" ng-class="{active: n <= volume}" ng-click="setVolume(n)"></i>
             </div>
 
             <div id="play-progress" class="ui small progress" ng-click="seek($event)">

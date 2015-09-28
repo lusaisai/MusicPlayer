@@ -171,6 +171,7 @@
         $scope.playPercentage = 0;
         $scope.duration = "00:00";
         $scope.playtime = "00:00";
+        $scope.volume = 5;  // 1 means 20%, 5 means 100%
 
 		// We don't wanna share the playlist songs with the songs in the explorer, it would create troubles
 		var copySelectedSongs = function(){
@@ -193,6 +194,21 @@
 			
 			return songs;
 		};
+
+        $scope.setVolume = function(number) {
+            $scope.volume = number;
+            audio.volume = number * 20 / 100;
+        };
+
+        var previousVolume = 5;
+        $scope.muteOrNot = function(){
+            if ($scope.volume > 0) {
+                previousVolume = $scope.volume;
+                $scope.setVolume(0);
+            } else{
+                $scope.setVolume(previousVolume);
+            }
+        };
 
         var sec2min = function(time){
             var minutes = Math.floor(time / 60);
