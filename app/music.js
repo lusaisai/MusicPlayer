@@ -40,7 +40,7 @@
     					obj.selected = false;
     				} else{
     					obj.selected = true;
-    				};
+    				}
     			} else if($event.shiftKey){
     				var start=0;
     				var end=0;
@@ -74,9 +74,8 @@
     				updateAlbumList();
     			} else if(name === "album"){
     				updateSongList();
-    			}
-    			
-    		}
+    			}	
+    		};
     	};
 
     	$scope.artistSelect = select("artist");
@@ -170,7 +169,7 @@
     	////////////////////////////////////////////////////////////////////////////////////////
     	var audio = new Audio();
         var lrc = new Lyricer();
-        $scope.STATUS = {"PLAYING": 0, "PAUSED": 1, "STOPPED": 2}
+        $scope.STATUS = {"PLAYING": 0, "PAUSED": 1, "STOPPED": 2};
         audio.src = "";
         audio.songUrl = ""; // audio.src will be encoded, this attribute keeps the original url
 		
@@ -251,7 +250,7 @@
             lrc.setLrc("[00:00] loading ...");
             $http.get(url + song.id + '/').then(function(response){
                 var content = response.data.content;
-                if ( content.length == 0 ) {
+                if ( content.length === 0 ) {
                     content = "[00:00] No lyrics found";
                 }
                 lrc.setLrc(content);
@@ -261,14 +260,15 @@
         // I could do it in the angular way, but the raw angular expression shows in the title beore it gets parsed,
         // I'll access the dom directly before I find the angular solution.
         var updateHtmlTitle = function(name){
+            var title;
             if (typeof(name) === "undefined" || name === '') {
-                var title = 'MusicPlayer - ';
+                title = 'MusicPlayer - ';
                 $http.get("/randompoem/").then(function(response){
                     var poem = response.data;
                     angular.element('title').html(title + poem.content);
                 });
             } else {
-                var title = 'MusicPlayer - ' + name;
+                title = 'MusicPlayer - ' + name;
                 angular.element('title').html(title);
             }
         };
@@ -285,7 +285,7 @@
                 $scope.status = $scope.STATUS.PLAYING;
 				$scope.currentPlaying = index;
                 updateHtmlTitle(song.name);
-			};
+			}
 		};
 
 		$scope.playNext = function(){
@@ -334,7 +334,7 @@
             for (var i = 0; i < array.length - 1; i++) {
                 var j = getRandomInt(i + 1, array.length);
                 valueSwap(array, i, j);
-            };
+            }
         };
 
         $scope.shufflePlaylist = function(){
@@ -430,9 +430,9 @@
                         index = i;
                         break;
                     }
-                };
+                }
 				$scope.playPlaylist(index);
-			};
+			}
 		};
 
 		$scope.stop = function () {
@@ -458,4 +458,4 @@
 
     }]);
 
-}())
+}());

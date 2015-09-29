@@ -1,0 +1,9 @@
+{
+	"devDependencies": {
+	    "grunt": "latest",
+	    "grunt-contrib-jshint": "latest",
+	    "grunt-contrib-uglify": "latest",
+	    "grunt-contrib-cssmin": "latest",
+	    "grunt-contrib-htmlmin": "latest"
+	}
+}
