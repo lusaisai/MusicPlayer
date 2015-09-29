@@ -31,6 +31,10 @@ module.exports = function(grunt) {
 		}
 	});
 
+	grunt.registerTask('copyicon', 'copy favicon.ico to dist', function() {
+		grunt.file.copy("favicon.ico", "dist/favicon.ico");
+	});
+
 	grunt.registerTask('copyindex', 'copy index to dist and point resources to oss', function() {
 		var data = grunt.file.read("index.html");
 		var host = "http://im633-resources.oss-cn-shenzhen.aliyuncs.com/assets/MusicPlayer/vendor/";
@@ -47,6 +51,5 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-htmlmin');
-	grunt.registerTask('default', ['jshint', 'uglify', 'cssmin', 'copyindex', 'htmlmin', 'removeindex']);
-	
+	grunt.registerTask('default', ['jshint', 'uglify', 'cssmin', 'copyicon', 'copyindex', 'htmlmin', 'removeindex']);
 };
