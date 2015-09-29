@@ -100,11 +100,12 @@
                                 id: album.id,
                                 name: album.name,
                                 pinyinName: album.pinyinName,
-                                selected: false
+                                selected: true
                             });
                         });
                     });
                     $scope.albums = allAlbums;
+                    updateSongList();
                 });
             }
     	};
