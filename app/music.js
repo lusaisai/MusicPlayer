@@ -261,13 +261,18 @@
         // I could do it in the angular way, but the raw angular expression shows in the title beore it gets parsed,
         // I'll access the dom directly before I find the angular solution.
         var updateHtmlTitle = function(name){
-            if (name === '') {
-                title = 'MusicPlayer';
+            if (typeof(name) === "undefined" || name === '') {
+                var title = 'MusicPlayer - ';
+                $http.get("/randompoem/").then(function(response){
+                    var poem = response.data;
+                    angular.element('title').html(title + poem.content);
+                });
             } else {
-                title = 'MusicPlayer - ' + name;
+                var title = 'MusicPlayer - ' + name;
+                angular.element('title').html(title);
             }
-            angular.element('title').html(title);
         };
+        updateHtmlTitle();
 
 		$scope.playPlaylist = function(index){
 			if ($scope.playlistSongs.length > 0) {
