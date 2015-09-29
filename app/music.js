@@ -88,21 +88,25 @@
     		// all albums of selected artist(s)
     		allAlbums = [];
 
-    		$scope.artists.forEach(function(artist, index){
-    			if (artist.selected) {
-    				$http.get("/artist/"+artist.id+"/").then(function (response) {
-    					response.data.albums.forEach(function(album, index){
-    						allAlbums.push({
-    							id: album.id,
-	    						name: album.name,
-	    						pinyinName: album.pinyinName,
-	    						selected: false
-	    					});
-    					});
-    					$scope.albums = allAlbums;
-    				});
-    			}
-    		});
+            var artist_ids = $scope.artists.filter(function(artist){return artist.selected === true;})
+                                           .map(function(artist){return artist.id;})
+                                           .join(',');
+
+            if (artist_ids) {
+                $http.get("/artist/"+artist_ids+"/").then(function (response) {
+                    response.data.artists.forEach(function(artist, index){
+                        artist.albums.forEach(function(album, index){
+                            allAlbums.push({
+                                id: album.id,
+                                name: album.name,
+                                pinyinName: album.pinyinName,
+                                selected: false
+                            });
+                        });
+                    });
+                    $scope.albums = allAlbums;
+                });
+            }
     	};
     	
     	$scope.$watch("albumFilerText", function (text) {
@@ -123,24 +127,28 @@
     	var updateSongList = function () {
     		// all songs of selected album(s)
     		allSongs = [];
-    		$scope.albums.forEach(function(album, index){
-    			if (album.selected) {
-    				$http.get("/album/"+album.id+"/").then(function (response) {
-    					response.data.songs.forEach(function(song, index){
-    						allSongs.push({
-    							id: song.id,
-	    						name: song.name,
-	    						artistName: song.artistName,
-	    						albumName: song.albumName,
-	    						pinyinName: song.pinyinName,
-	    						url: song.url,
-	    						selected: true
-	    					});
-    					});
-    					$scope.songs = allSongs;
-    				});
-    			};
-    		});
+            var album_ids = $scope.albums.filter(function(album){return album.selected === true;})
+                                        .map(function(album){return album.id;})
+                                        .join(',');
+
+            if (album_ids) {
+                $http.get("/album/"+album_ids+"/").then(function (response) {
+                    response.data.albums.forEach(function(album, index){
+                        album.songs.forEach(function(song, index){
+                            allSongs.push({
+                                id: song.id,
+                                name: song.name,
+                                artistName: song.artistName,
+                                albumName: song.albumName,
+                                pinyinName: song.pinyinName,
+                                url: song.url,
+                                selected: true
+                            });
+                        });
+                    });
+                    $scope.songs = allSongs;
+                });
+            }
     	};
     	
     	$scope.$watch("songFilerText", function (text) {
