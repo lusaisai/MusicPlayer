@@ -284,24 +284,30 @@
 		};
 
 		$scope.playNext = function(){
-			if ( $scope.currentPlaying < $scope.playlistSongs.length - 1 ) {
+            var playOrder = angular.element("input[name='playorder']").val();
+            if (playOrder === "random") {
+                $scope.playNextRandomly();
+            } else if ( $scope.currentPlaying < $scope.playlistSongs.length - 1 ) {
 				$scope.currentPlaying += 1;
 				$scope.playPlaylist($scope.currentPlaying);
 			} else {
                 $scope.currentPlaying = -1;
                 audio.src = "";
-                updateHtmlTitle(song.name);
+                updateHtmlTitle('');
             }
 		};
 
 		$scope.playPrevious = function(){
-			if ( $scope.currentPlaying > 0 ) {
+            var playOrder = angular.element("input[name='playorder']").val();
+            if (playOrder === "random") {
+                $scope.playNextRandomly();
+            } else if ( $scope.currentPlaying > 0 ) {
 				$scope.currentPlaying -= 1;
 				$scope.playPlaylist($scope.currentPlaying);
 			} else {
                 $scope.currentPlaying = $scope.playlistSongs.length;
                 audio.src = "";
-                updateHtmlTitle(song.name);
+                updateHtmlTitle('');
             }
 		};
 
@@ -311,6 +317,24 @@
 
         $scope.playNextRandomly = function(){
             $scope.playPlaylist(getRandomInt(0, $scope.playlistSongs.length));
+        };
+
+        var arrayShuffle = function (array) {
+            var valueSwap = function(array, i , j) {
+                var tmp = array[i];
+                array[i] = array[j];
+                array[j] = tmp;
+            };
+
+            for (var i = 0; i < array.length - 1; i++) {
+                var j = getRandomInt(i + 1, array.length);
+                valueSwap(array, i, j);
+            };
+        };
+
+        $scope.shufflePlaylist = function(){
+            arrayShuffle($scope.playlistSongs);
+            refreshCurrentPlayingIndex();
         };
 
         $scope.playSomeRandomSongs = function() {
