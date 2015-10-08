@@ -28,7 +28,7 @@
     			$scope.artists = allArtists; 
     		} else {
     			$scope.artists = allArtists.filter(function (artist) {
-    				return artist.pinyinName.indexOf(text.toLowerCase()) > -1 || artist.name.indexOf(text.toLowerCase()) > -1;
+    				return artist.pinyinName.indexOf(text.toLowerCase()) > -1 || artist.name.toLowerCase().indexOf(text.toLowerCase()) > -1;
     			});
     		}
     	});
@@ -114,7 +114,7 @@
     			$scope.albums = allAlbums; 
     		} else {
     			$scope.albums = allAlbums.filter(function (album) {
-    				return album.pinyinName.indexOf(text.toLowerCase()) > -1 || album.name.indexOf(text.toLowerCase()) > -1;
+    				return album.pinyinName.indexOf(text.toLowerCase()) > -1 || album.name.toLowerCase().indexOf(text.toLowerCase()) > -1;
     			});
     		}
     	});
@@ -156,7 +156,7 @@
     			$scope.songs = allSongs; 
     		} else {
     			$scope.songs = allSongs.filter(function (song) {
-    				return song.pinyinName.indexOf(text.toLowerCase()) > -1 || song.name.indexOf(text.toLowerCase()) > -1;
+    				return song.pinyinName.indexOf(text.toLowerCase()) > -1 || song.name.toLowerCase().indexOf(text.toLowerCase()) > -1;
     			});
     		}
     	});
@@ -396,6 +396,11 @@
         window.addEventListener('lyricerclick', function(e){
             if (e.detail.time > 0) {
                 audio.currentTime = e.detail.time;
+            }
+        });
+        window.addEventListener('keyup', function(e){
+            if (e.code === "Delete"){
+                $scope.removeFromPlaylist();
             }
         });
 
