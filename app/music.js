@@ -383,6 +383,41 @@
 			$scope.$digest();
 		};
 
+        var storePlayerStatus = function(){
+            var data = JSON.stringify({
+                "playlistSongs": $scope.playlistSongs,
+                "currentPlaying": $scope.currentPlaying,
+                "volume": $scope.volume,
+                "time": audio.currentTime,
+                "status": $scope.status
+            });
+            localStorage.setItem("playerStatus", data);
+        };
+        window.addEventListener('beforeunload', storePlayerStatus);
+
+        var loadPlayerStatus = function(){
+            var data = localStorage.getItem('playerStatus');
+            if (data) {
+                var player = JSON.parse(data);
+                $scope.playlistSongs = player.playlistSongs;
+                $scope.setVolume(player.volume);
+                if (player.currentPlaying >= 0 && player.currentPlaying < player.playlistSongs.length) {
+                    if (player.status === $scope.STATUS.PLAYING) {
+                        $scope.playPlaylist(player.currentPlaying);
+                    } else if (player.status === $scope.STATUS.PAUSED) {
+                        $scope.playPlaylist(player.currentPlaying);
+                        audio.pause();
+                    }
+                }
+                $scope.status = player.status;
+                var seek = function(){
+                    audio.currentTime = player.time;
+                    audio.removeEventListener("loadeddata", seek);
+                };
+                audio.addEventListener("loadeddata", seek);
+            }
+        };
+
         var whenTimeupdate = function(){
             $scope.playtime = sec2min(Math.floor(audio.currentTime));
             $scope.duration = sec2min(Math.floor(audio.duration));
@@ -460,6 +495,8 @@
 		};
 
 		$scope.playlistSongSelect = select("playlistSong");
+
+        loadPlayerStatus();
 
     }]);
 
